@@ -97,6 +97,8 @@ For an out-of-scope lead, place only its title, URL, suggested owner, and one sh
 
 ## Required output
 
+When run in this repository, copy the exact run header and section headings from `runbook.md`, using the shared parameters in `run.json`. The main coordinator performs merging and saving after you stop; do not upload files yourself.
+
 Write only your own inbox: `runs/<run_id>/us_source_inbox.md`. Do not write the combined `source_inbox.md` or another collector's file. If file writing is unavailable, return the exact Markdown and explicitly state that it was not saved.
 
 Start with the title, Collector ID `US`, instruction version, run ID, period with timezone, collected-at timestamp, and run status: `Complete`, `Partial`, or `Blocked`. Complete means the defined checks finished, not exhaustive coverage. Partial means some checks or inputs were unavailable. Blocked means collection could not run; never portray access failure as no news.

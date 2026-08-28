@@ -3,7 +3,16 @@ Thumbs.db
 *.tmp
 *.log
 node_modules/
+
+# Collection results stay local and in Drive, not in the source repository.
+runs/
+/storage_config.json
+.secrets/
 .env
 .env.*
 !/.env.example
-
+credentials*.json
+token*.json
+__pycache__/
+*.py[cod]
+.venv/

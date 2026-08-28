@@ -1,0 +1,27 @@
+{
+  "destination": {
+    "provider": "google_drive",
+    "folder_id": "",
+    "folder_url": "",
+    "folder_name": "TNT Newsletter",
+    "run_folder_pattern": "{run_id}",
+    "require_sharing_check": true,
+    "sharing_decision": "private_except_explicit_people"
+  },
+  "defaults": {
+    "timezone": "Asia/Ho_Chi_Minh",
+    "lookback_days": 7,
+    "max_items_per_collector": 20,
+    "collectors": [
+      "VN",
+      "US",
+      "MACRO"
+    ]
+  },
+  "outputs": {
+    "combined_inbox": "source_inbox.md",
+    "readable_google_doc": "T&T Source Inbox - {run_id}",
+    "notebooklm_url_list": "notebooklm_sources.txt",
+    "save_receipt": "save_receipt.json"
+  }
+}

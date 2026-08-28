@@ -1,6 +1,19 @@
 # T&T Capital — Collector Setup, Shared Format & Merge Guide
 
-Version: 1.0 | Updated: 2026-08-28
+Version: 1.1 | Updated: 2026-08-28
+
+## Repository execution and saving
+
+For this repository, follow `AGENTS.md` and `runbook.md` to continue from
+collection through merge and Google Drive saving in the same manual task.
+`storage_config.json` contains the exact destination. The main coordinator does
+the merge and upload; the collectors still stop after their own inboxes.
+
+The runbook's exact header and heading format takes precedence over illustrative
+templates below. It also requires comma-separated `Contributors / original IDs`
+on every merged record for structural validation. Use `Handoffs` and `Coverage
+and gaps` as the exact final section titles. No spreadsheet or personal review
+status is part of this workflow. The user simply opens the saved source inbox.
 
 ## What this package does
 
