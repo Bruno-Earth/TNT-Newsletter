@@ -1,7 +1,7 @@
 interface:
   display_name: "Run T&T Daily Collectors"
   short_description: "Run, merge, and save today's source collection"
-  default_prompt: "Use $tnt-daily-collectors to run today's three collectors, merge and validate the results, save them to the configured private Google Drive folder, and stop before analysis or newsletter writing."
+  default_prompt: "Use $tnt-daily-collectors to run today's three collectors, merge and validate the results, save them in this week's Google Drive folder, and stop before analysis or newsletter writing."
 
 policy:
   allow_implicit_invocation: false

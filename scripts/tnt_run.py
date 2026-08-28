@@ -73,6 +73,17 @@ def timestamp(value: str) -> datetime:
     return result
 
 
+def drive_week(stop: datetime, zone: ZoneInfo) -> dict[str, str]:
+    local_date = stop.astimezone(zone).date()
+    week_start = local_date - timedelta(days=local_date.weekday())
+    week_end = week_start + timedelta(days=6)
+    return {
+        "start": week_start.isoformat(),
+        "end": week_end.isoformat(),
+        "name": f"Week {week_start.isoformat()} to {week_end.isoformat()}",
+    }
+
+
 def write_json(path: Path, data: dict) -> None:
     if path.is_symlink():
         raise RunError(f"Refusing to write through symlink: {path.name}")
@@ -113,6 +124,7 @@ def initialize(root: Path, start=None, end=None, run_id=None, collectors=None, m
         "timezone": selected_timezone, "collectors": selected,
         "max_items_per_collector": limit,
         "destination": config["destination"],
+        "drive_week": drive_week(stop, zone),
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     write_json(folder / "run.json", data)

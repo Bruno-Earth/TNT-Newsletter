@@ -16,14 +16,10 @@ granting access. Use the configured ID, not a folder-name search, when saving.
   Drive plugin/skills where available. If tools are missing, stop and explain
   that this environment needs its own Google connection. Do not invent a tool
   name, request pasted credentials, or assume another ChatGPT session's access.
-- Read destination metadata, confirm it is the expected folder, and check
-  access/sharing. A successful read is not proof of write access.
-- Codex uses the user's authenticated Google account and has no separate Drive
-  identity that needs to be invited. The destination must remain private except
-  for people the user explicitly shares it with. Recheck permissions before
-  every upload. If an anyone-with-link or domain-wide permission exists, stop
-  before collecting and report it. Preserve explicit user and group shares; do
-  not change permissions unless the user authorizes that exact change.
+- Read destination metadata and confirm it is the expected folder. A successful
+  read is not proof of write access.
+- Sharing status is not a collection blocker. Do not inspect, change, add, or
+  remove Drive permissions as part of this workflow.
 - If a saving dependency is blocked, stop before collection and explain what is
   unavailable. Do not spend a full collection run expecting an unconfigured
   upload to work.
@@ -38,7 +34,9 @@ python scripts/tnt_run.py init
 
 This creates a unique `runs/<run_id>/run.json`. Defaults are all three
 collectors, the past seven days, Asia/Ho_Chi_Minh, and up to 20 items per
-collector. It makes no network calls and does not start collection.
+collector. It also records `drive_week`, the Monday-to-Sunday date range and
+exact Drive folder name for the run's end date. It makes no network calls and
+does not start collection.
 
 For an explicit period, use:
 
@@ -133,32 +131,38 @@ successful collection.
 
 ## 6. Save with the authenticated Google Drive tools
 
-Recheck the configured destination and resolved sharing choice. Then:
+Recheck the configured destination. Then:
 
-1. Create a child folder named exactly `<run_id>` under the configured folder
-   ID. Before creation, check for an existing same-name child in that parent.
-   If one exists, inspect it rather than creating duplicates. If multiple
-   matching folders exist, stop for clarification.
-2. Upload each existing collector inbox, `source_inbox.md`, `run.json`,
-   `validation.json`, and `notebooklm_sources.txt` into that child folder.
+1. Read `drive_week.name` from `run.json`. It is a Monday-to-Sunday label such
+   as `Week 2026-08-24 to 2026-08-30`, calculated in the run timezone.
+2. Search for an exact-name child folder directly under the configured T&T
+   Newsletter folder ID. If none exists, create it. If exactly one exists,
+   reuse it. If multiple exact matches exist, stop and report the ambiguity.
+   Never create a second folder for the same week.
+3. Upload each existing collector inbox, `source_inbox.md`, `run.json`,
+   `validation.json`, and `notebooklm_sources.txt` directly into that weekly
+   folder. Use the Drive filename `<run_id> - <local filename>` so later runs in
+   the same week do not overwrite or duplicate the current run's artifacts.
    Do not upload credentials, unrelated local files, or raw private signals.
-3. Create a simple native Google Docs reading copy of the merged inbox named
+4. Create a simple native Google Docs reading copy of the merged inbox named
    `T&T Source Inbox - <run_id>` in the same folder. Preserve the source links,
    record metadata, descriptions, uncertainty, and grouping. Follow the Google
    Docs authoring/import skill when available; do not invent an unsupported
    conversion. This is a readable copy of the source list, not an article or
    investment report. The Markdown remains the canonical archive.
-4. Read metadata back for every written item, checking its actual parent ID,
+5. Read metadata back for every written item, checking its actual parent ID,
    name, and MIME type. Keep the URLs and IDs returned by completed operations.
    Never derive or invent a Google Docs URL from an expected title.
-5. Save a local `save_receipt.json` containing the run ID, run-folder ID/URL,
+6. Save a local `save_receipt.json` containing the run ID, weekly-folder name,
+   weekly-folder ID/URL,
    each uploaded item's local filename and returned ID/URL, the reading-copy
    ID/URL, and `Saved` or `Partial` with any errors. Upload this receipt last
-   and verify it too. It must contain no tokens or account credentials.
+   and verify it too. Upload it as `<run_id> - save_receipt.json`. It must
+   contain no tokens or account credentials.
 
 If an operation fails or times out, preserve successful uploads and record
 what remains. Do not report Saved, restart the entire upload, or create another
-folder blindly. On retry, reconcile the destination and existing IDs first;
+weekly folder blindly. On retry, reconcile the destination and existing IDs first;
 if content differs, ask before replacing it or use a new run/revision. If only
 the reading copy fails, provide the verified Markdown link and explain that
 the Google Docs copy is missing.
@@ -168,7 +172,7 @@ and permitted, but do not download every linked article just to fill that folder
 
 ## 7. Return the result and stop
 
-Return the verified **Google Docs inbox link** and **run-folder link**, the
+Return the verified **Google Docs inbox link** and **weekly-folder link**, the
 collection period, retained counts, and any missing coverage or save failures.
 The user can read the inbox without marking statuses or using a spreadsheet.
 

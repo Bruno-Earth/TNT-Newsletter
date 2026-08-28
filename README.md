@@ -11,8 +11,8 @@ The workflow is started by one manual request to Codex:
 3. Route out-of-scope leads to the correct collector.
 4. Save one source inbox per collector.
 5. Have the main coordinator combine the inboxes and remove duplicate events across collectors.
-6. Validate the combined records, then save the files to a dated run folder in Google Drive.
-7. Return one readable Google Docs inbox link and the run-folder link. Stop.
+6. Validate the combined records, then save the files to the matching Monday-to-Sunday folder in Google Drive.
+7. Return one readable Google Docs inbox link and the weekly-folder link. Stop.
 
 Later analysis, writing, design, distribution, and scheduling are outside this phase. Merging and saving happen within the same manually started task.
 
@@ -32,9 +32,9 @@ The first run uses the preceding seven days unless dates are supplied. Later run
 
 Set your destination once with `python scripts/tnt_run.py configure --folder-url "YOUR_GOOGLE_DRIVE_FOLDER_URL"`. This creates `storage_config.json`, which is excluded from Git. The committed `storage_config.example.json` has no live destination. This command stores a location; it does not authorize Google access.
 
-Each run gets its own child folder in the configured destination. Open `T&T Source Inbox - <run_id>` there to read the combined results. Keep the Markdown originals as the archive.
+Each run is saved in a weekly child folder named `Week YYYY-MM-DD to YYYY-MM-DD`, using Monday as the start and Sunday as the end in `Asia/Ho_Chi_Minh`. The workflow creates that exact folder only when it is missing and reuses it for later runs in the same week. Open `T&T Source Inbox - <run_id>` there to read the combined results. Uploaded archive filenames include the run ID so another run that week does not overwrite them.
 
-**Connection prerequisite:** These files do not install a Google connector or grant account access. The Codex environment executing them needs working Drive tools. Connecting Drive in a separate ChatGPT session is not enough to prove local access. The workflow checks this before collecting. Codex uses the user's authenticated Google account rather than a separate Drive identity. The destination must remain private except for people the user explicitly shares it with, and its permissions must be checked before every upload.
+**Connection prerequisite:** These files do not install a Google connector or grant account access. The Codex environment executing them needs working Drive tools. Connecting Drive in a separate ChatGPT session is not enough to prove local access. The workflow confirms the configured destination and required Drive actions before collecting. Sharing status does not block a run, and the workflow does not change folder permissions.
 
 ## Active Collector Instructions
 

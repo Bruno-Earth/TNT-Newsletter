@@ -76,13 +76,34 @@ class RunTests(unittest.TestCase):
     def test_init_preserves_destination_and_scope(self):
         self.assertEqual(self.run["destination"]["folder_id"], "test-folder-id")
         self.assertEqual(self.run["collectors"], ["VN", "US", "MACRO"])
+        self.assertEqual(self.run["drive_week"], {
+            "start": "2026-08-24",
+            "end": "2026-08-30",
+            "name": "Week 2026-08-24 to 2026-08-30",
+        })
         self.assertTrue((self.folder / "run.json").is_file())
+
+    def test_runs_in_same_week_reuse_the_same_drive_week_name(self):
+        monday = tnt.initialize(
+            self.root, "2026-08-23T12:00:00+07:00", "2026-08-24T09:00:00+07:00", "monday-run"
+        )
+        tuesday = tnt.initialize(
+            self.root, "2026-08-24T09:00:00+07:00", "2026-08-25T09:00:00+07:00", "tuesday-run"
+        )
+        next_monday = tnt.initialize(
+            self.root, "2026-08-30T09:00:00+07:00", "2026-08-31T09:00:00+07:00", "next-monday-run"
+        )
+        self.assertEqual(monday["drive_week"], tuesday["drive_week"])
+        self.assertEqual(monday["drive_week"]["name"], "Week 2026-08-24 to 2026-08-30")
+        self.assertEqual(next_monday["drive_week"]["name"], "Week 2026-08-31 to 2026-09-06")
 
     def test_configure_is_local_and_does_not_claim_access(self):
         result = tnt.configure(self.root, "https://drive.google.com/drive/folders/test-folder-id?usp=sharing")
         self.assertFalse(result["access_verified"])
         config = json.loads((self.root / "storage_config.json").read_text())
         self.assertEqual(config["destination"]["folder_id"], "test-folder-id")
+        self.assertNotIn("require_sharing_check", config["destination"])
+        self.assertNotIn("sharing_decision", config["destination"])
 
     def test_configure_requires_explicit_destination_replacement(self):
         other = "https://drive.google.com/drive/folders/other-test-folder"

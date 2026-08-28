@@ -4,9 +4,7 @@
     "folder_id": "",
     "folder_url": "",
     "folder_name": "TNT Newsletter",
-    "run_folder_pattern": "{run_id}",
-    "require_sharing_check": true,
-    "sharing_decision": "private_except_explicit_people"
+    "week_folder_pattern": "Week {week_start} to {week_end}"
   },
   "defaults": {
     "timezone": "Asia/Ho_Chi_Minh",
