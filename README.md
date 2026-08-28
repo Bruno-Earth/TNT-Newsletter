@@ -24,6 +24,12 @@ Open this repository in Codex with web research and an authenticated Google Driv
 
 `AGENTS.md` gives the main coordinator its instructions. `runbook.md` contains the exact sequence and failure handling. The existing four Markdown files remain the collection and merge instructions.
 
+### Manual Daily Launcher
+
+Use the explicit-only repository skill at [`.agents/skills/tnt-daily-collectors`](.agents/skills/tnt-daily-collectors/SKILL.md) as the manual run button. In the desktop app, select **Run T&T Daily Collectors** from Skills and send its prepared prompt. In Codex, invoke `$tnt-daily-collectors` directly.
+
+The first run uses the preceding seven days unless dates are supplied. Later runs begin at the exact end of the latest successfully saved run and finish at the current trigger time. Selecting the skill starts one run only; it never creates a schedule.
+
 Set your destination once with `python scripts/tnt_run.py configure --folder-url "YOUR_GOOGLE_DRIVE_FOLDER_URL"`. This creates `storage_config.json`, which is excluded from Git. The committed `storage_config.example.json` has no live destination. This command stores a location; it does not authorize Google access.
 
 Each run gets its own child folder in the configured destination. Open `T&T Source Inbox - <run_id>` there to read the combined results. Keep the Markdown originals as the archive.
